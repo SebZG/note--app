@@ -22,7 +22,7 @@ const NavbarComponent = () => {
    return (
       <Navbar fixed='top' expand="md" className='bg-primary'>
          <Container fluid>
-            <Navbar.Brand as={Button} style={{cursor: "pointer"}} onClick={() => navigate("/")} className='text-white'>Notes App</Navbar.Brand>
+            <Navbar.Brand as={Button} style={{ cursor: "pointer" }} onClick={() => navigate("/")} className='text-white'>Notes App</Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll">
                <Nav
@@ -32,12 +32,14 @@ const NavbarComponent = () => {
                >
                   <Nav.Link onClick={handleLogOut}>Logout</Nav.Link>
                   <NavDropdown title="Links" id="navbarScrollingDropdown">
-                     <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                     <NavDropdown.Item href="#action4">
+                     <NavDropdown.Item href="">
+                        Action
+                     </NavDropdown.Item>
+                     <NavDropdown.Item href="">
                         Another action
                      </NavDropdown.Item>
                      <NavDropdown.Divider />
-                     <NavDropdown.Item href="#action5">
+                     <NavDropdown.Item href="">
                         Something else here
                      </NavDropdown.Item>
                   </NavDropdown>
@@ -47,7 +49,6 @@ const NavbarComponent = () => {
                      type="search"
                      placeholder="Search"
                      className="me-2"
-                     aria-label="Search"
                   />
                   {/* <Button variant="outline-warning">Search</Button> */}
                </Form>

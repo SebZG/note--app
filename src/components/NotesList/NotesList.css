@@ -31,18 +31,22 @@
 
 .fa-pen-nib {
    transition: all 0.2s ease-in-out;
+   font-size: 1.1rem;
 }
 
 .fa-pen-nib:hover {
    cursor: pointer;
-   color: green
+   color: green;
+   transform: scale(1.1);
 }
 
 .fa-trash-can {
    transition: all 0.2s ease-in-out;
+   font-size: 1.1rem;
 }
 
 .fa-trash-can:hover {
    cursor: pointer;
    color: red;
+   transform: scale(1.1);
 }

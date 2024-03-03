@@ -1,0 +1,14 @@
+.dropdown-menu {
+   background-color: #333;
+   border-color: rgba(245, 245, 245, 0.5);
+   border-radius: 0;
+   box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-item {
+   color: whitesmoke;
+}
+
+.dropdown-divider {
+   border-color: rgba(245, 245, 245, 0.5);
+}
