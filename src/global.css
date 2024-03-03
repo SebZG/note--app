@@ -1,0 +1,24 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body {
+   background-color: #333;
+   color: whitesmoke;
+}
+
+/* button {
+   border: none;
+   border-radius: 0.25rem;
+   padding: 0.5rem;
+} */
+
+.btn {
+   border-radius: 0;
+}
+
+.form-control {
+   border-radius: 0;
+}

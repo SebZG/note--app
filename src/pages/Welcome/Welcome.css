@@ -1,0 +1,25 @@
+.forgot-password {
+   cursor: pointer;
+   color: rgba(245, 245, 245, 0.548);
+}
+
+.forgot-password:hover {
+   text-decoration: underline;
+   color: whitesmoke;
+}
+
+.error {
+   padding: 0.5rem;
+   background-color: rgb(250, 128, 114);
+   color: black;
+}
+
+.forgot-password,
+.error {
+   text-align: center;
+} 
+
+.login__btn,
+.signup__btn {
+   color: whitesmoke;
+}
