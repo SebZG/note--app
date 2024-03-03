@@ -13,17 +13,19 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavbarComponent from "../../components/Navbar/NavbarComponent";
+import NavbarComponent from "../../components/Navbar";
+import NotesList from "../../components/NotesList";
 import { auth, db } from "../../firebase/init";
 
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
+import UpdateNoteModal from '../../components/UpdateNoteModal';
+import CreateNoteModal from '../../components/CreateNoteModal';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -163,28 +165,7 @@ const HomePage = () => {
                   </div>
 
                   {/* Notes List */}
-                  <Row xs={1} md={2} className="g-4">
-                     {notes.map((note, i) => {
-                        // console.log(note)
-                        return (
-                           <Col key={i}>
-                              <Card bg={"warning"} style={{ width: '18rem', height: '14rem', margin: "1rem auto" }}>
-                                 <Card.Body >
-                                    <div className="d-flex justify-content-between">
-                                       <Card.Title className="note-title">{note.title}</Card.Title>
-                                       <div className="d-flex">
-                                          <i onClick={() => handleShowUpdate(note.id)} className="fa-solid fa-pen-nib me-2"></i>
-                                          <i onClick={() => deleteNote(note.id)} className="fa-regular fa-trash-can"></i>
-                                       </div>
-                                    </div>
-                                    <hr />
-                                    <Card.Text className="note-content">{note.content}</Card.Text>
-                                 </Card.Body>
-                              </Card>
-                           </Col>
-                        )
-                     })}
-                  </Row>
+                  <NotesList notes={notes} handleShowUpdate={handleShowUpdate} deleteNote={deleteNote} />
                </Col>
 
                <Col xs md="1"></Col>
@@ -192,92 +173,28 @@ const HomePage = () => {
          </Container>
 
          {/* Create Note Modal */}
-         <Modal className="create-note__modal" show={showCreate} onHide={handleCloseCreate} backdrop="static" >
-            <Modal.Header closeButton>
-               <Modal.Title>New Note</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <Form>
-                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                     <Form.Label>Title</Form.Label>
-                     <Form.Control
-                        onChange={handleCreateInputChange}
-                        value={newNote.title}
-                        name="title"
-                        type="text"
-                        autoFocus
-                     />
-                     {isTitleInvalid && <Form.Text className="text-danger">Title is required</Form.Text>}
-                  </Form.Group>
-                  <Form.Group
-                     className="mb-3"
-                     controlId="exampleForm.ControlTextarea1"
-                  >
-                     <Form.Label>Content</Form.Label>
-                     <Form.Control
-                        onChange={handleCreateInputChange}
-                        value={newNote.content}
-                        name="content"
-                        as="textarea"
-                        rows={3}
-                     />
-                     {isContentInvalid && <Form.Text className="text-danger">Content is required</Form.Text>}
-                  </Form.Group>
-               </Form>
-            </Modal.Body>
-            <Modal.Footer>
-               <Button variant="secondary" onClick={handleDiscardCreate}>
-                  Discard
-               </Button>
-               <Button variant="primary" onClick={createNote}>
-                  Save
-               </Button>
-            </Modal.Footer>
-         </Modal>
+         <CreateNoteModal {...{
+            showCreate,
+            handleCloseCreate,
+            handleCreateInputChange,
+            createNote,
+            newNote,
+            isTitleInvalid,
+            isContentInvalid,
+            handleDiscardCreate
+         }} />
 
          {/* Update Note Modal */}
-         <Modal className="update-note__modal" show={showUpdate} onHide={handleCloseUpdate} backdrop="static" >
-            <Modal.Header closeButton>
-               <Modal.Title>Updating Note...</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <Form>
-                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                     <Form.Label>Title</Form.Label>
-                     <Form.Control
-                        onChange={handleUpdateInputChange}
-                        value={updatedNote.title}
-                        name="title"
-                        type="text"
-                        autoFocus
-                     />
-                     {isTitleInvalid && <Form.Text className="text-danger">Title is required</Form.Text>}
-                  </Form.Group>
-                  <Form.Group
-                     className="mb-3"
-                     controlId="exampleForm.ControlTextarea1"
-                  >
-                     <Form.Label>Content</Form.Label>
-                     <Form.Control
-                        onChange={handleUpdateInputChange}
-                        value={updatedNote.content}
-                        name="content"
-                        as="textarea"
-                        rows={3}
-                     />
-                     {isContentInvalid && <Form.Text className="text-danger">Content is required</Form.Text>}
-                  </Form.Group>
-               </Form>
-            </Modal.Body>
-            <Modal.Footer>
-               <Button variant="secondary" onClick={handleDiscardUpdate}>
-                  Cancel
-               </Button>
-               <Button variant="primary" onClick={updateNote}>
-                  Save
-               </Button>
-            </Modal.Footer>
-         </Modal>
+         <UpdateNoteModal {...{
+            showUpdate,
+            handleCloseUpdate,
+            handleUpdateInputChange,
+            updateNote,
+            updatedNote,
+            isTitleInvalid,
+            isContentInvalid,
+            handleDiscardUpdate
+         }} />
 
       </>
 
