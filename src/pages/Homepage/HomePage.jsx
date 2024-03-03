@@ -1,7 +1,3 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { auth, db } from "../../firebase/init";
-import NavbarComponent from "../../components/Navbar/NavbarComponent";
 import {
    onAuthStateChanged,
 } from 'firebase/auth';
@@ -15,26 +11,32 @@ import {
    updateDoc,
    where
 } from 'firebase/firestore';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import NavbarComponent from "../../components/Navbar/NavbarComponent";
+import { auth, db } from "../../firebase/init";
 
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
+import Container from "react-bootstrap/Container";
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import Container from "react-bootstrap/Container";
+import Row from 'react-bootstrap/Row';
 
 import './HomePage.css';
 
 const HomePage = () => {
    const [loading, setLoading] = useState(true);
    const [notes, setNotes] = useState([]);
-
-   const [newNote, setNewNote] = useState({
-      title: "",
-      content: "",
-   });
+   const [newNote, setNewNote] = useState({ title: "", content: "", });
    const [showCreate, setShowCreate] = useState(false);
+   const [updatedNote, setUpdatedNote] = useState({ title: "", content: "", });
+   const [showUpdate, setShowUpdate] = useState(false);
+   const [isTitleInvalid, setIsTitleInvalid] = useState(false);
+   const [isContentInvalid, setIsContentInvalid] = useState(false);
+   const navigate = useNavigate();
+
    const handleCloseCreate = () => setShowCreate(false);
    const handleShowCreate = () => setShowCreate(true);
    const handleDiscardCreate = () => {
@@ -42,11 +44,6 @@ const HomePage = () => {
       setShowCreate(false)
    };
 
-   const [updatedNote, setUpdatedNote] = useState({
-      title: "",
-      content: "",
-   });
-   const [showUpdate, setShowUpdate] = useState(false);
    const handleCloseUpdate = () => setShowUpdate(false);
    const handleDiscardUpdate = () => {
       setShowUpdate(false);
@@ -57,10 +54,6 @@ const HomePage = () => {
       setUpdatedNote(selectedNote);
    };
 
-   const [isTitleInvalid, setIsTitleInvalid] = useState(false);
-   const [isContentInvalid, setIsContentInvalid] = useState(false);
-
-   const navigate = useNavigate();
 
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
@@ -74,9 +67,11 @@ const HomePage = () => {
       });
    }, []);
 
-   const handleCreateInputChange = (e) => {
-      const { name, value } = e.target;
-      setNewNote({ ...newNote, [name]: value });
+   const getNotesByUid = async (uid) => {
+      const postCollectionUidRef = query(collection(db, "posts"), where("uid", "==", uid));
+      const { docs } = await getDocs(postCollectionUidRef);
+      const notes = docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setNotes(notes);
    };
 
    const handleUpdateInputChange = (e) => {
@@ -84,14 +79,9 @@ const HomePage = () => {
       setUpdatedNote({ ...updatedNote, [name]: value });
    };
 
-   const getNotesByUid = async (uid) => {
-      const postCollectionUidRef = await query(
-         collection(db, "posts"),
-         where("uid", "==", uid)
-      );
-      const { docs } = await getDocs(postCollectionUidRef);
-      const notes = docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      setNotes(notes);
+   const handleCreateInputChange = (e) => {
+      const { name, value } = e.target;
+      setNewNote({ ...newNote, [name]: value });
    };
 
    const createNote = () => {
