@@ -10,7 +10,6 @@ import {
    collection,
    deleteDoc,
    doc,
-   getDoc,
    getDocs,
    query,
    updateDoc,
@@ -126,6 +125,22 @@ const HomePage = () => {
    };
 
    const updateNote = async () => {
+      let isTitleInvalid = false;
+      let isContentInvalid = false;
+
+      if (!updatedNote.content) {
+         isContentInvalid = true;
+      }
+      if (!updatedNote.title) {
+         isTitleInvalid = true;
+      }
+
+      if (isTitleInvalid || isContentInvalid) {
+         setIsTitleInvalid(isTitleInvalid);
+         setIsContentInvalid(isContentInvalid);
+         return;
+      }
+
       const { id, ...rest } = updatedNote;
       const docRef = doc(db, "posts", id);
       await updateDoc(docRef, rest);
