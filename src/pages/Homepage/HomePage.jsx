@@ -17,7 +17,6 @@ import {
    where
 } from 'firebase/firestore';
 
-import './HomePage.css';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -26,14 +25,16 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Container from "react-bootstrap/Container";
 
+import './HomePage.css';
+
 const HomePage = () => {
    const [loading, setLoading] = useState(true);
    const [notes, setNotes] = useState([]);
+
    const [newNote, setNewNote] = useState({
       title: "",
       content: "",
    });
-
    const [showCreate, setShowCreate] = useState(false);
    const handleCloseCreate = () => setShowCreate(false);
    const handleShowCreate = () => setShowCreate(true);
@@ -49,19 +50,14 @@ const HomePage = () => {
    const [showUpdate, setShowUpdate] = useState(false);
    const handleCloseUpdate = () => setShowUpdate(false);
    const handleDiscardUpdate = () => {
-      setNewNote({ title: "", content: "", });
       setShowUpdate(false);
    };
    const handleShowUpdate = (id) => {
       setShowUpdate(true);
-      getNoteById(id);
+      const selectedNote = notes.find(note => note.id === id);
+      setUpdatedNote(selectedNote);
    };
-   // const handleShowUpdate = (id) => {
-   //    setShowUpdate(true);
-   //    const selectedNote = notes.find(note => note.id === id);
-   //    setNewNote(selectedNote); // Set the selected note to the newNote state
-   // };
-   
+
    const [isTitleInvalid, setIsTitleInvalid] = useState(false);
    const [isContentInvalid, setIsContentInvalid] = useState(false);
 
@@ -79,9 +75,14 @@ const HomePage = () => {
       });
    }, []);
 
-   const handleInputChange = (e) => {
+   const handleCreateInputChange = (e) => {
       const { name, value } = e.target;
       setNewNote({ ...newNote, [name]: value });
+   };
+
+   const handleUpdateInputChange = (e) => {
+      const { name, value } = e.target;
+      setUpdatedNote({ ...updatedNote, [name]: value });
    };
 
    const getNotesByUid = async (uid) => {
@@ -124,32 +125,12 @@ const HomePage = () => {
       handleCloseCreate();
    };
 
-   const getNoteById = async (id) => {
+   const updateNote = async () => {
+      const { id, ...rest } = updatedNote;
       const docRef = doc(db, "posts", id);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-         const post = docSnap.data();
-         console.log(post);
-         // setUpdatedNote(post);
-         // console.log(updatedNote);
-      }
-   };
-
-   const updateNote = async (id) => {
-      const docRef = doc(db, "posts", id);
-      const note = await getNoteById(id);
-      // const newNote = {|
-      //    ...note,
-      //    title: "This is an update!",
-      //    // content: "I updated this post!"
-      // };
-      // console.log(newNote);
-      setUpdatedNote({
-         ...note,
-      })
-      updateDoc(docRef, updatedNote);
-      getNotesByUid(auth.currentUser.uid);
+      await updateDoc(docRef, rest);
+      await getNotesByUid(auth.currentUser.uid);
+      handleCloseUpdate();
    };
 
    const deleteNote = async (id) => {
@@ -215,7 +196,7 @@ const HomePage = () => {
                   <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                      <Form.Label>Title</Form.Label>
                      <Form.Control
-                        onChange={handleInputChange}
+                        onChange={handleCreateInputChange}
                         value={newNote.title}
                         name="title"
                         type="text"
@@ -229,7 +210,7 @@ const HomePage = () => {
                   >
                      <Form.Label>Content</Form.Label>
                      <Form.Control
-                        onChange={handleInputChange}
+                        onChange={handleCreateInputChange}
                         value={newNote.content}
                         name="content"
                         as="textarea"
@@ -244,7 +225,7 @@ const HomePage = () => {
                   Discard
                </Button>
                <Button variant="primary" onClick={createNote}>
-                  Save Note
+                  Save
                </Button>
             </Modal.Footer>
          </Modal>
@@ -259,8 +240,8 @@ const HomePage = () => {
                   <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                      <Form.Label>Title</Form.Label>
                      <Form.Control
-                        onChange={handleInputChange}
-                        value={newNote.title}
+                        onChange={handleUpdateInputChange}
+                        value={updatedNote.title}
                         name="title"
                         type="text"
                         autoFocus
@@ -273,8 +254,8 @@ const HomePage = () => {
                   >
                      <Form.Label>Content</Form.Label>
                      <Form.Control
-                        onChange={handleInputChange}
-                        value={newNote.content}
+                        onChange={handleUpdateInputChange}
+                        value={updatedNote.content}
                         name="content"
                         as="textarea"
                         rows={3}
@@ -285,10 +266,10 @@ const HomePage = () => {
             </Modal.Body>
             <Modal.Footer>
                <Button variant="secondary" onClick={handleDiscardUpdate}>
-                  Discard
+                  Cancel
                </Button>
                <Button variant="primary" onClick={updateNote}>
-                  Save Note
+                  Save
                </Button>
             </Modal.Footer>
          </Modal>

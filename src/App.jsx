@@ -18,8 +18,8 @@ import {
 import { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { auth, db } from './firebase/init';
-import HomePage from './pages/Homepage/HomePage';
-import Welcome from './pages/Welcome/Welcome';
+import HomePage from './pages/Homepage/';
+import Welcome from './pages/Welcome/';
 
 
 function App() {
