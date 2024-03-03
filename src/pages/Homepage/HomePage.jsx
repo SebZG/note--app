@@ -11,10 +11,14 @@ import {
    updateDoc,
    where
 } from 'firebase/firestore';
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import CreateNoteModal from '../../components/CreateNoteModal';
 import NavbarComponent from "../../components/Navbar";
 import NotesList from "../../components/NotesList";
+import UpdateNoteModal from '../../components/UpdateNoteModal';
 import { auth, db } from "../../firebase/init";
 
 import Button from 'react-bootstrap/Button';
@@ -22,39 +26,58 @@ import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 
-import CreateNoteModal from '../../components/CreateNoteModal';
-import UpdateNoteModal from '../../components/UpdateNoteModal';
 import './HomePage.css';
 
 const HomePage = () => {
+   // States
    const [loading, setLoading] = useState(true);
    const [notes, setNotes] = useState([]);
-   const [newNote, setNewNote] = useState({ title: "", content: "", });
    const [showCreate, setShowCreate] = useState(false);
-   const [updatedNote, setUpdatedNote] = useState({ title: "", content: "", });
+   const [newNote, setNewNote] = useState({ title: "", content: "", });
    const [showUpdate, setShowUpdate] = useState(false);
+   const [updatedNote, setUpdatedNote] = useState({ title: "", content: "", });
    const [isTitleInvalid, setIsTitleInvalid] = useState(false);
    const [isContentInvalid, setIsContentInvalid] = useState(false);
+
+   // Other hooks
    const navigate = useNavigate();
 
-   const handleCloseCreate = () => setShowCreate(false);
+   // Helper functions/variables
+   let invalidTitle = false;
+   let invalidContent = false;
+
+   const resetErrors = () => {
+      setIsContentInvalid(false);
+      setIsTitleInvalid(false);
+   }
+
+   // Event handlers
    const handleShowCreate = () => setShowCreate(true);
+   const handleCloseCreate = () => {
+      resetErrors();
+      setShowCreate(false)
+   };
    const handleDiscardCreate = () => {
+      resetErrors();
       setNewNote({ title: "", content: "", });
       setShowCreate(false)
    };
 
-   const handleCloseUpdate = () => setShowUpdate(false);
-   const handleDiscardUpdate = () => {
-      setShowUpdate(false);
-   };
    const handleShowUpdate = (id) => {
       setShowUpdate(true);
       const selectedNote = notes.find(note => note.id === id);
       setUpdatedNote(selectedNote);
    };
+   const handleCloseUpdate = () => {
+      resetErrors();
+      setShowUpdate(false)
+   };
+   const handleDiscardUpdate = () => {
+      resetErrors();
+      setShowUpdate(false);
+   };
 
-
+   // Effects
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
          setLoading(false);
@@ -67,6 +90,7 @@ const HomePage = () => {
       });
    }, []);
 
+   // Firebase functions
    const getNotesByUid = async (uid) => {
       const postCollectionUidRef = query(collection(db, "posts"), where("uid", "==", uid));
       const { docs } = await getDocs(postCollectionUidRef);
@@ -75,29 +99,28 @@ const HomePage = () => {
    };
 
    const handleUpdateInputChange = (e) => {
+      resetErrors();
       const { name, value } = e.target;
       setUpdatedNote({ ...updatedNote, [name]: value });
    };
 
    const handleCreateInputChange = (e) => {
+      resetErrors();
       const { name, value } = e.target;
       setNewNote({ ...newNote, [name]: value });
    };
 
    const createNote = () => {
-      let isTitleInvalid = false;
-      let isContentInvalid = false;
 
-      if (!newNote.content) {
-         isContentInvalid = true;
-      }
       if (!newNote.title) {
-         isTitleInvalid = true;
+         invalidTitle = true;
       }
-
-      if (isTitleInvalid || isContentInvalid) {
-         setIsTitleInvalid(isTitleInvalid);
-         setIsContentInvalid(isContentInvalid);
+      if (!newNote.content) {
+         invalidContent = true;
+      }
+      if (invalidTitle || invalidContent) {
+         setIsTitleInvalid(invalidTitle);
+         setIsContentInvalid(invalidContent);
          return;
       }
 
@@ -115,19 +138,16 @@ const HomePage = () => {
    };
 
    const updateNote = async () => {
-      let isTitleInvalid = false;
-      let isContentInvalid = false;
 
-      if (!updatedNote.content) {
-         isContentInvalid = true;
-      }
       if (!updatedNote.title) {
-         isTitleInvalid = true;
+         invalidTitle = true;
       }
-
-      if (isTitleInvalid || isContentInvalid) {
-         setIsTitleInvalid(isTitleInvalid);
-         setIsContentInvalid(isContentInvalid);
+      if (!updatedNote.content) {
+         invalidContent = true;
+      }
+      if (invalidTitle || invalidContent) {
+         setIsTitleInvalid(invalidTitle);
+         setIsContentInvalid(invalidContent);
          return;
       }
 
