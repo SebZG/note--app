@@ -20,12 +20,10 @@ import { auth, db } from "../../firebase/init";
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
-import UpdateNoteModal from '../../components/UpdateNoteModal';
 import CreateNoteModal from '../../components/CreateNoteModal';
+import UpdateNoteModal from '../../components/UpdateNoteModal';
 import './HomePage.css';
 
 const HomePage = () => {
