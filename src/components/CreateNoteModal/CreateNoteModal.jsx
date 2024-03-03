@@ -1,5 +1,7 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 
+import './CreateNoteModal.css';
+
 const CreateNoteModal = ({ showCreate, handleCloseCreate, handleCreateInputChange, createNote, newNote, isTitleInvalid, isContentInvalid, handleDiscardCreate }) => {
    return (
       <Modal className="create-note__modal" show={showCreate} onHide={handleCloseCreate} backdrop="static" >

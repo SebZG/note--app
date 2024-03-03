@@ -1,5 +1,7 @@
 import { Card, Col, Row } from 'react-bootstrap';
 
+import './NotesList.css';
+
 const NoteList = ({ notes, handleShowUpdate, deleteNote }) => {
    return (
       <Row xs={1} md={2} className="g-4">

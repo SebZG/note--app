@@ -158,7 +158,7 @@ const HomePage = () => {
 
                   <div className="create-note__btn-wrapper mb-5">
                      <Button onClick={handleShowCreate} variant="outline-primary" >
-                        Create Post
+                        Create Note
                      </Button>
                   </div>
 

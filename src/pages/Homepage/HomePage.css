@@ -2,40 +2,9 @@
    margin-top: 7rem;
 }
 
-.card {
-   border-radius: 0;
-   box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, 0.3);
-   transition: all 0.2s ease-in-out;
-}
-
-.card:hover {
-   transform: scale(1.02);
-   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0);
-}
-
-.card-body {
-   mask-image: linear-gradient(180deg, #000 60%, transparent);
-}
-
-.note-title {
-   width: 200px;
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
-}
-
-.note-content {
-   white-space: pre-line;
-}
-
 .create-note__btn-wrapper {
    display: flex;
    justify-content: center;
-}
-
-hr {
-   margin: 1rem;
-   border: 1px solid rgb(0, 0, 0);
 }
 
 .create-note__modal .modal-content,
@@ -51,22 +20,4 @@ hr {
 
 .modal-footer {
    border-color: black;
-}
-
-.fa-pen-nib {
-   transition: all 0.2s ease-in-out;
-}
-
-.fa-pen-nib:hover {
-   cursor: pointer;
-   color: green
-}
-
-.fa-trash-can {
-   transition: all 0.2s ease-in-out;
-}
-
-.fa-trash-can:hover {
-   cursor: pointer;
-   color: red;
 }
