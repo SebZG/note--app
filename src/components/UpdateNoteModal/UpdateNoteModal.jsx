@@ -1,5 +1,7 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 
+import './UpdateNoteModal.css';
+
 const UpdateNoteModal = ({ showUpdate, handleCloseUpdate, handleUpdateInputChange, updateNote, updatedNote, isTitleInvalid, isContentInvalid, handleDiscardUpdate }) => {
    return (
       <Modal className="update-note__modal" show={showUpdate} onHide={handleCloseUpdate} backdrop="static" >
