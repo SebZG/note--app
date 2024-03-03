@@ -4,10 +4,10 @@ import {
    sendPasswordResetEmail,
    signInWithEmailAndPassword,
 } from "firebase/auth";
+import { auth } from "../../firebase/init";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase/init";
-import './Welcome.css';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -15,18 +15,24 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+import './Welcome.css';
+
 const Welcome = () => {
+   // States
    const [userCredentials, setUserCredentials] = useState({});
    const [selected, setSelected] = useState("Login");
    const [error, setError] = useState("");
 
+   // Other hooks
    const navigate = useNavigate();
 
+   // Event handlers
    const handleCredentials = (e) => {
       setError("");
       setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
    }
 
+   // Firebase functions
    const handleSignup = (e) => {
       e.preventDefault();
       // setError("");
@@ -42,7 +48,7 @@ const Welcome = () => {
 
    const handleLogin = (e) => {
       e.preventDefault();
-      setError("");
+      // setError("");
       signInWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
          .then((userCred) => {
             const user = userCred.user;
@@ -61,6 +67,7 @@ const Welcome = () => {
    //    alert("Email sent! Check your inbox for further instructions.");
    // }
 
+   // Effects
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
          if (user) {
