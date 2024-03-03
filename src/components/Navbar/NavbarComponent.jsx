@@ -1,7 +1,6 @@
-import './NavbarComponent.css';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/init';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../../firebase/init';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -9,6 +8,8 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+
+import './NavbarComponent.css';
 
 const NavbarComponent = () => {
    const navigate = useNavigate();
