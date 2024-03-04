@@ -91,8 +91,8 @@ const Welcome = () => {
             <Col>
 
                <div className="d-flex flex-column mx-auto my-5 align-items-center">
-
                   {isLoading && <FullPageLoader />}
+
 
                   <h1 className="text-center my-5 text-warning">Notes App</h1>
 
