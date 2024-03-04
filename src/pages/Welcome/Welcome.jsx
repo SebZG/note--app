@@ -55,7 +55,8 @@ const Welcome = () => {
       // setError("");
       createUserWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
          .then((userCred) => {
-            const user = userCred.user;
+            // const user = userCred.user;
+            // console.log(user);
             navigate("/homepage");
          })
          .catch((error) => {
@@ -67,9 +68,9 @@ const Welcome = () => {
       e.preventDefault();
       // setError("");
       signInWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
-         .then((userCred) => {
-            const user = userCred.user;
-            console.log(user);
+         .then((userCred) => {8
+            // const user = userCred.user;
+            // console.log(user);
             navigate("/homepage");
          })
          .catch((error) => {
