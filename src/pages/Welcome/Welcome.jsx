@@ -142,6 +142,7 @@ const Welcome = () => {
 
 							<AuthButtons selected={selected} setSelected={setSelected} />
 
+							{/* Login / signup form */}
 							<CredentialForm
 								userCredentials={userCredentials}
 								selected={selected}
