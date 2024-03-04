@@ -1,8 +1,8 @@
 import './PasswordReset.css'
 
-const PasswordReset = ({ handlePasswordReset }) => {
+const PasswordReset = ({ handleShowPasswordReset }) => {
    return (
-      <p onClick={handlePasswordReset} className="forgot-password text-center">forgot password?</p>
+      <p onClick={handleShowPasswordReset} className="forgot-password text-center">forgot password?</p>
    );
 };
 

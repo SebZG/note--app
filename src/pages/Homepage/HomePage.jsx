@@ -78,6 +78,18 @@ const HomePage = () => {
       setShowUpdate(false);
    };
 
+   const handleUpdateInputChange = (e) => {
+      resetErrors();
+      const { name, value } = e.target;
+      setUpdatedNote({ ...updatedNote, [name]: value });
+   };
+
+   const handleCreateInputChange = (e) => {
+      resetErrors();
+      const { name, value } = e.target;
+      setNewNote({ ...newNote, [name]: value });
+   };
+
    // Effects
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
@@ -99,18 +111,6 @@ const HomePage = () => {
       const { docs } = await getDocs(postCollectionUidRef);
       const notes = docs.map(doc => ({ ...doc.data(), id: doc.id }));
       setNotes(notes);
-   };
-
-   const handleUpdateInputChange = (e) => {
-      resetErrors();
-      const { name, value } = e.target;
-      setUpdatedNote({ ...updatedNote, [name]: value });
-   };
-
-   const handleCreateInputChange = (e) => {
-      resetErrors();
-      const { name, value } = e.target;
-      setNewNote({ ...newNote, [name]: value });
    };
 
    const createNote = () => {
@@ -170,7 +170,7 @@ const HomePage = () => {
 
    return (
       <>
-      
+
          <NavbarComponent />
 
          {isLoading && <FullPageLoader />}

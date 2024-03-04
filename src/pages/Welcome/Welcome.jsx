@@ -1,8 +1,8 @@
 import {
-   createUserWithEmailAndPassword,
-   onAuthStateChanged,
-   sendPasswordResetEmail,
-   signInWithEmailAndPassword,
+	createUserWithEmailAndPassword,
+	onAuthStateChanged,
+	sendPasswordResetEmail,
+	signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../firebase/init";
 
@@ -17,104 +17,167 @@ import FullPageLoader from "../../components/FullPageLoader";
 import AuthButtons from "../../components/WelcomeComponents/AuthButtons";
 import CredentialForm from "../../components/WelcomeComponents/CredentialsForm";
 import PasswordReset from "../../components/WelcomeComponents/PasswordReset";
+import PasswordResetModal from "../../components/WelcomeComponents/PasswordResetModal";
 import WelcomeHeader from "../../components/WelcomeComponents/WelcomeHeader";
+import PasswordResetConfirmationModal from "../../components/WelcomeComponents/PasswordResetConfirmationModal";
 
 import './Welcome.css';
 
 const Welcome = () => {
-   // States
-   const [isLoading, setIsLoading] = useState(true);
-   const [userCredentials, setUserCredentials] = useState({});
-   const [selected, setSelected] = useState("Login");
-   const [error, setError] = useState("");
+	// States
+	const [isLoading, setIsLoading] = useState(true);
+	const [userCredentials, setUserCredentials] = useState({ email: "", password: "" });
+	const [selected, setSelected] = useState("Login");
+	const [error, setError] = useState("");
 
-   // Other hooks
-   const navigate = useNavigate();
+	const [showPasswordReset, setShowPasswordReset] = useState(false);
+	const [invalidEmail, setInvalidEmail] = useState(false);
+	const [email, setEmail] = useState("");
 
-   // Event handlers
-   const handleCredentials = (e) => {
-      setError("");
-      setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
-   };
+	const [showPasswordResetConfirmation, setShowPasswordResetConfirmation] = useState(false);
 
-   // Effects
-   useEffect(() => {
-      onAuthStateChanged(auth, (user) => {
-         if (user) {
-            navigate("/homepage");
-         } else {
-            navigate("/");
-         }
-         setInterval(() => {
-            setIsLoading(false);
-         }, 500);
-      });
-   }, []);
+	// Other hooks
+	const navigate = useNavigate();
 
-   // Firebase functions
-   const handleSignup = (e) => {
-      e.preventDefault();
-      // setError("");
-      createUserWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
-         .then((userCred) => {
-            // const user = userCred.user;
-            // console.log(user);
-            navigate("/homepage");
-         })
-         .catch((error) => {
-            setError(error.code);
-         });
-   };
+	// Event handlers
+	const handleCredentials = (e) => {
+		setError("");
+		const { name, value } = e.target;
+		setUserCredentials({ ...userCredentials, [name]: value });
+	};
 
-   const handleLogin = (e) => {
-      e.preventDefault();
-      // setError("");
-      signInWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
-         .then((userCred) => {
-            // const user = userCred.user;
-            // console.log(user);
-            navigate("/homepage");
-         })
-         .catch((error) => {
-            setError(error.code);
-         });
-   };
+	const handleShowPasswordReset = () => {
+		setShowPasswordReset(true);
+	}
 
-   const handlePasswordReset = () => {
-      const email = prompt("Please enter your email");
-      if (!email) return;
-      sendPasswordResetEmail(auth, email);
-      alert("Email sent! Check your inbox for further instructions.");
-   };
+	const handleClosePasswordReset = () => {
+		setInvalidEmail(false);
+		setShowPasswordReset(false);
+	}
 
-   return (
-      <Container>
-         <Row>
-            <Col>
+	const handleCancelPasswordReset = () => {
+		setInvalidEmail(false);
+		setEmail("");
+		setShowPasswordReset(false);
+	}
 
-               <div className="d-flex flex-column mx-auto my-5 align-items-center">
+	const handlePasswordResetInputChange = (e) => {
+		setInvalidEmail(false);
+		const { value } = e.target;
+		setEmail(value);
+	}
 
-                  {isLoading && <FullPageLoader />}
+	const handleClosePasswordResetConfirmation = () => {
+		setShowPasswordResetConfirmation(false);
+	}
 
-                  <WelcomeHeader />
+	// Effects
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				navigate("/homepage");
+			} else {
+				navigate("/");
+			}
+			setInterval(() => {
+				setIsLoading(false);
+			}, 500);
+		});
+	}, []);
 
-                  <AuthButtons selected={selected} setSelected={setSelected} />
+	// Firebase functions
+	const handleSignup = (e) => {
+		e.preventDefault();
+		// setError("");
+		createUserWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
+			.then((userCred) => {
+				// const user = userCred.user;
+				// console.log(user);
+				navigate("/homepage");
+			})
+			.catch((error) => {
+				setError(error.code);
+			});
+	};
 
-                  <CredentialForm
-                     selected={selected}
-                     handleCredentials={handleCredentials}
-                     handleLogin={handleLogin}
-                     handleSignup={handleSignup}
-                     error={error}
-                  />
+	const handleLogin = (e) => {
+		e.preventDefault();
+		// setError("");
+		signInWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
+			.then((userCred) => {
+				// const user = userCred.user;
+				// console.log(user);
+				navigate("/homepage");
+			})
+			.catch((error) => {
+				setError(error.code);
+			});
+	};
 
-                  <PasswordReset handlePasswordReset={handlePasswordReset} />
+	const handleSubmitPasswordReset = () => {
 
-               </div >
+		if (!email) {
+			setInvalidEmail(true);
+			return;
+		}
 
-            </Col >
-         </Row >
-      </Container >
-   )
+		sendPasswordResetEmail(auth, email);
+		setEmail({ email: "" });
+		setShowPasswordReset(false);
+		setShowPasswordResetConfirmation(true);
+	}
+
+	return (
+		<>
+
+			<Container>
+				<Row>
+					<Col>
+
+						<div className="d-flex flex-column mx-auto my-5 align-items-center">
+
+							{isLoading && <FullPageLoader />}
+
+							<WelcomeHeader />
+
+							<AuthButtons selected={selected} setSelected={setSelected} />
+
+							<CredentialForm
+								userCredentials={userCredentials}
+								selected={selected}
+								handleCredentials={handleCredentials}
+								handleLogin={handleLogin}
+								handleSignup={handleSignup}
+								error={error}
+							/>
+
+							<PasswordReset handleShowPasswordReset={handleShowPasswordReset} />
+
+						</div >
+
+					</Col >
+				</Row >
+			</Container >
+
+			{/* Reset Password Modal */}
+			<PasswordResetModal
+				show={showPasswordReset}
+				handleClose={handleClosePasswordReset}
+				handleSubmit={handleSubmitPasswordReset}
+				handleCancel={handleCancelPasswordReset}
+				handleInputChange={handlePasswordResetInputChange}
+				email={email}
+				invalidEmail={invalidEmail}
+			/>
+
+			{/* Password Reset Confirmation Modal */}
+			<PasswordResetConfirmationModal
+				showPasswordReset={showPasswordResetConfirmation}
+				handleClosePasswordReset={handleClosePasswordResetConfirmation}
+			/>
+
+		</>
+
+	)
 }
 export default Welcome;

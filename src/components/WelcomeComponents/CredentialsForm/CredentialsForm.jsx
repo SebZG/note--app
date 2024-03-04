@@ -3,13 +3,14 @@ import Button from 'react-bootstrap/Button';
 
 import './CredentialsForm.css';
 
-const CredentialForm = ({ selected, handleCredentials, handleLogin, handleSignup, error }) => {
+const CredentialForm = ({ userCredentials, selected, handleCredentials, handleLogin, handleSignup, error }) => {
    return (
       <Form className="d-flex flex-column">
          <Form.Group>
             <Form.Label className="text-primary"><b>Email</b></Form.Label>
             <Form.Control
                className="mb-3"
+               value={userCredentials.email}
                type="email"
                name="email"
                placeholder="Enter Email..."
@@ -20,6 +21,7 @@ const CredentialForm = ({ selected, handleCredentials, handleLogin, handleSignup
             <Form.Label className="text-primary"><b>Password</b></Form.Label>
             <Form.Control
                className="mb-3"
+               value={userCredentials.password}
                type="password"
                name="password"
                placeholder="Enter Password..."
