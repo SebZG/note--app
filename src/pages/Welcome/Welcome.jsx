@@ -15,10 +15,13 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+import FullPageLoader from "../../components/FullPageLoader";
+
 import './Welcome.css';
 
 const Welcome = () => {
    // States
+   const [isLoading, setIsLoading] = useState(true);
    const [userCredentials, setUserCredentials] = useState({});
    const [selected, setSelected] = useState("Login");
    const [error, setError] = useState("");
@@ -31,6 +34,20 @@ const Welcome = () => {
       setError("");
       setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
    };
+
+   // Effects
+   useEffect(() => {
+      onAuthStateChanged(auth, (user) => {
+         if (user) {
+            navigate("/homepage");
+         } else {
+            navigate("/");
+         }
+         setInterval(() => {
+            setIsLoading(false);
+         }, 500);
+      });
+   }, []);
 
    // Firebase functions
    const handleSignup = (e) => {
@@ -67,23 +84,14 @@ const Welcome = () => {
       alert("Email sent! Check your inbox for further instructions.");
    };
 
-   // Effects
-   useEffect(() => {
-      onAuthStateChanged(auth, (user) => {
-         if (user) {
-            navigate("/homepage");
-         } else {
-            navigate("/")
-         }
-      });
-   }, []);
-
    return (
       <Container>
          <Row>
             <Col>
 
-               <div className="d-flex flex-column mx-auto align-items-center">
+               <div className="d-flex flex-column mx-auto my-5 align-items-center">
+
+                  {isLoading && <FullPageLoader />}
 
                   <h1 className="text-center my-5 text-warning">Notes App</h1>
 
@@ -149,11 +157,11 @@ const Welcome = () => {
 
                   </Form>
 
-               </div>
+               </div >
 
-            </Col>
-         </Row>
-      </Container>
+            </Col >
+         </Row >
+      </Container >
    )
 }
 export default Welcome;

@@ -20,6 +20,7 @@ import NavbarComponent from "../../components/Navbar";
 import NotesList from "../../components/NotesList";
 import UpdateNoteModal from '../../components/UpdateNoteModal';
 import { auth, db } from "../../firebase/init";
+import FullPageLoader from '../../components/FullPageLoader';
 
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -30,7 +31,7 @@ import './HomePage.css';
 
 const HomePage = () => {
    // States
-   const [loading, setLoading] = useState(true);
+   const [isLoading, setIsLoading] = useState(true);
    const [notes, setNotes] = useState([]);
    const [showCreate, setShowCreate] = useState(false);
    const [newNote, setNewNote] = useState({ title: "", content: "", });
@@ -80,13 +81,15 @@ const HomePage = () => {
    // Effects
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
-         setLoading(false);
          if (!user) {
             navigate("/");
          } else {
             navigate("/homepage");
          }
          getNotesByUid(user.uid);
+         setInterval(() => {
+            setIsLoading(false);
+         }, 500);
       });
    }, []);
 
@@ -169,12 +172,14 @@ const HomePage = () => {
       <>
          <NavbarComponent />
 
+         {isLoading && <FullPageLoader />}
+
          <Container className="homepage">
             <Row className="justify-content-center">
                <Col xs md="1"></Col>
 
                <Col md="10">
-                  <p>{loading ? "Loading..." : `Hello: ${auth.currentUser.email}`}</p>
+                  <p>{isLoading ? "Loading..." : `Hello: ${auth.currentUser.email}`}</p>
 
                   <div className="create-note__btn-wrapper mb-5">
                      <Button onClick={handleShowCreate} variant="outline-primary" >
