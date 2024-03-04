@@ -1,6 +1,6 @@
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../firebase/init';
+import { auth } from '../../../firebase/init';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';

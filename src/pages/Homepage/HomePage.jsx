@@ -15,14 +15,14 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import CreateNoteModal from '../../components/CreateNoteModal';
-import NavbarComponent from "../../components/Navbar";
-import NotesList from "../../components/NotesList";
-import UpdateNoteModal from '../../components/UpdateNoteModal';
+import CreateNoteModal from '../../components/HomepageComponents/CreateNoteModal';
+import NavbarComponent from "../../components/HomepageComponents/Navbar";
+import CreateNoteButton from "../../components/HomepageComponents/CreateNoteButton";
+import NotesList from "../../components/HomepageComponents/NotesList";
+import UpdateNoteModal from '../../components/HomepageComponents/UpdateNoteModal';
 import { auth, db } from "../../firebase/init";
 import FullPageLoader from '../../components/FullPageLoader';
 
-import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
@@ -170,6 +170,7 @@ const HomePage = () => {
 
    return (
       <>
+      
          <NavbarComponent />
 
          {isLoading && <FullPageLoader />}
@@ -181,11 +182,7 @@ const HomePage = () => {
                <Col md="10">
                   <p>{isLoading ? "Loading..." : `Hello: ${auth.currentUser.email}`}</p>
 
-                  <div className="create-note__btn-wrapper mb-5">
-                     <Button onClick={handleShowCreate} variant="outline-primary" >
-                        Create Note
-                     </Button>
-                  </div>
+                  <CreateNoteButton handleShowCreate={handleShowCreate} />
 
                   {/* Notes List */}
                   <NotesList notes={notes} handleShowUpdate={handleShowUpdate} deleteNote={deleteNote} />

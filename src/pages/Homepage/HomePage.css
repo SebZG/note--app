@@ -2,11 +2,6 @@
    margin-top: 7rem;
 }
 
-.create-note__btn-wrapper {
-   display: flex;
-   justify-content: center;
-}
-
 .create-note__modal .modal-content,
 .update-note__modal .modal-content {
    background-color: rgb(255, 193, 7);
