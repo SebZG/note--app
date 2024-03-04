@@ -30,7 +30,7 @@ const Welcome = () => {
    const handleCredentials = (e) => {
       setError("");
       setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
-   }
+   };
 
    // Firebase functions
    const handleSignup = (e) => {
@@ -60,12 +60,12 @@ const Welcome = () => {
          });
    };
 
-   // const handlePasswordReset = () => {
-   //    const email = prompt("Please enter your email");
-   //    if (!email) return;
-   //    sendPasswordResetEmail(auth, email);
-   //    alert("Email sent! Check your inbox for further instructions.");
-   // }
+   const handlePasswordReset = () => {
+      const email = prompt("Please enter your email");
+      if (!email) return;
+      sendPasswordResetEmail(auth, email);
+      alert("Email sent! Check your inbox for further instructions.");
+   };
 
    // Effects
    useEffect(() => {
@@ -145,7 +145,7 @@ const Welcome = () => {
 
                      {error && <div className="error mb-3">{error}</div>}
 
-                     {/* <p onClick={handlePasswordReset} className="forgot-password">forgot password?</p> */}
+                     <p onClick={handlePasswordReset} className="forgot-password">forgot password?</p>
 
                   </Form>
 
