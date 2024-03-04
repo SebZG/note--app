@@ -7,7 +7,7 @@ const PasswordResetModal = ({ show, handleClose, handleSubmit, handleCancel, han
     return (
         <Modal className="rest-password__modal" show={show} onHide={handleClose} backdrop="static" >
             <Modal.Header closeButton>
-                <Modal.Title>Reset Email</Modal.Title>
+                <Modal.Title>Reset Password</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
