@@ -1,5 +1,6 @@
 import {
    onAuthStateChanged,
+   sendEmailVerification
 } from 'firebase/auth';
 import {
    addDoc,
@@ -93,11 +94,15 @@ const HomePage = () => {
    // Effects
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
-         if (!user) {
+
+         if (user && !user.emailVerified) {
             navigate("/");
-         } else {
+         } else if (user && user.emailVerified) {
             navigate("/homepage");
+         } else {
+            navigate("/");
          }
+
          getNotesByUid(user.uid);
          setInterval(() => {
             setIsLoading(false);

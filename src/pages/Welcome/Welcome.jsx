@@ -3,6 +3,8 @@ import {
 	onAuthStateChanged,
 	sendPasswordResetEmail,
 	signInWithEmailAndPassword,
+	sendEmailVerification,
+	signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/init";
 
@@ -20,6 +22,7 @@ import PasswordReset from "../../components/WelcomeComponents/PasswordReset";
 import PasswordResetModal from "../../components/WelcomeComponents/PasswordResetModal";
 import WelcomeHeader from "../../components/WelcomeComponents/WelcomeHeader";
 import PasswordResetConfirmationModal from "../../components/WelcomeComponents/PasswordResetConfirmationModal";
+import EmailVerificationModal from "../../components/WelcomeComponents/EmailVerificationModal/EmailVerificationModal";
 
 import './Welcome.css';
 
@@ -31,6 +34,7 @@ const Welcome = () => {
 	const [error, setError] = useState("");
 
 	const [showPasswordReset, setShowPasswordReset] = useState(false);
+	const [showEmailVerification, setShowEmailVerification] = useState(false);
 	const [invalidEmail, setInvalidEmail] = useState(false);
 	const [email, setEmail] = useState("");
 
@@ -71,14 +75,28 @@ const Welcome = () => {
 		setShowPasswordResetConfirmation(false);
 	}
 
+	const handleCloseEmailVerification = () => {
+		setShowEmailVerification(false);
+	}
+
 	// Effects
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
-			if (user) {
+			if (user && !user.emailVerified) {
+				// navigate("/");
+
+				sendEmailVerification(auth.currentUser)
+					.then(() => {
+						setShowEmailVerification(true);
+						signOut(auth);
+					});
+
+			} else if (user && user.emailVerified) {
 				navigate("/homepage");
 			} else {
 				navigate("/");
 			}
+
 			setInterval(() => {
 				setIsLoading(false);
 			}, 500);
@@ -88,26 +106,28 @@ const Welcome = () => {
 	// Firebase functions
 	const handleSignup = (e) => {
 		e.preventDefault();
-		// setError("");
+
+		setIsLoading(true);
 		createUserWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
 			.then((userCred) => {
 				// const user = userCred.user;
-				// console.log(user);
-				navigate("/homepage");
+				navigate("/");
+				setSelected("Login");
 			})
 			.catch((error) => {
 				setError(error.code);
 			});
+
 	};
 
 	const handleLogin = (e) => {
 		e.preventDefault();
-		// setError("");
+
+		setIsLoading(true);
 		signInWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
 			.then((userCred) => {
 				// const user = userCred.user;
-				// console.log(user);
-				navigate("/homepage");
+				navigate("/");
 			})
 			.catch((error) => {
 				setError(error.code);
@@ -169,6 +189,12 @@ const Welcome = () => {
 				handleInputChange={handlePasswordResetInputChange}
 				email={email}
 				invalidEmail={invalidEmail}
+			/>
+
+			{/* Email Verification Modal */}
+			<EmailVerificationModal
+				showEmailVerification={showEmailVerification}
+				handleCloseEmailVerification={handleCloseEmailVerification}
 			/>
 
 			{/* Password Reset Confirmation Modal */}
