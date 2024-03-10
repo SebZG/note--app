@@ -1,6 +1,7 @@
 import {
+   getAuth,
    onAuthStateChanged,
-   sendEmailVerification
+   updateProfile
 } from 'firebase/auth';
 import {
    addDoc,
@@ -21,7 +22,7 @@ import NavbarComponent from "../../components/HomepageComponents/Navbar";
 import CreateNoteButton from "../../components/HomepageComponents/CreateNoteButton";
 import NotesList from "../../components/HomepageComponents/NotesList";
 import UpdateNoteModal from '../../components/HomepageComponents/UpdateNoteModal';
-import { auth, db } from "../../firebase/init";
+import { db } from "../../firebase/init";
 import FullPageLoader from '../../components/FullPageLoader';
 
 import Col from 'react-bootstrap/Col';
@@ -29,6 +30,9 @@ import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 
 import './HomePage.css';
+
+const auth = getAuth();
+const user = auth.currentUser;
 
 const HomePage = () => {
    // States
@@ -40,6 +44,8 @@ const HomePage = () => {
    const [updatedNote, setUpdatedNote] = useState({ title: "", content: "", });
    const [isTitleInvalid, setIsTitleInvalid] = useState(false);
    const [isContentInvalid, setIsContentInvalid] = useState(false);
+   const [fistTimeLogin, setFistTimeLogin] = useState(true);
+   const [userProfile, setUserProfile] = useState({});
 
    // Other hooks
    const navigate = useNavigate();
@@ -48,21 +54,29 @@ const HomePage = () => {
    let invalidTitle = false;
    let invalidContent = false;
 
-   const resetErrors = () => {
-      setIsContentInvalid(false);
+   const resetTitleInvalid = () => {
       setIsTitleInvalid(false);
+   }
+
+   const resetContentInvalid = () => {
+      setIsContentInvalid(false);
+   }
+
+   const resetErrors = () => {
+      resetTitleInvalid();
+      resetContentInvalid();
    }
 
    // Event handlers
    const handleShowCreate = () => setShowCreate(true);
    const handleCloseCreate = () => {
       resetErrors();
-      setShowCreate(false)
+      setShowCreate(false);
    };
    const handleDiscardCreate = () => {
       resetErrors();
       setNewNote({ title: "", content: "", });
-      setShowCreate(false)
+      setShowCreate(false);
    };
 
    const handleShowUpdate = (id) => {
@@ -72,23 +86,33 @@ const HomePage = () => {
    };
    const handleCloseUpdate = () => {
       resetErrors();
-      setShowUpdate(false)
+      setShowUpdate(false);
    };
    const handleDiscardUpdate = () => {
       resetErrors();
       setShowUpdate(false);
    };
 
-   const handleUpdateInputChange = (e) => {
-      resetErrors();
-      const { name, value } = e.target;
-      setUpdatedNote({ ...updatedNote, [name]: value });
-   };
-
    const handleCreateInputChange = (e) => {
-      resetErrors();
+      if (newNote.title.length >= 0) {
+         resetTitleInvalid();
+      }
+      if (newNote.content.length >= 0) {
+         resetContentInvalid();
+      }
       const { name, value } = e.target;
       setNewNote({ ...newNote, [name]: value });
+   };
+
+   const handleUpdateInputChange = (e) => {
+      if (updatedNote.title.length >= 0) {
+         resetTitleInvalid();
+      }
+      if (updatedNote.content.length >= 0) {
+         resetContentInvalid();
+      }
+      const { name, value } = e.target;
+      setUpdatedNote({ ...updatedNote, [name]: value });
    };
 
    // Effects
@@ -99,6 +123,13 @@ const HomePage = () => {
             navigate("/");
          } else if (user && user.emailVerified) {
             navigate("/homepage");
+            setUserProfile({
+               displayName: user.displayName,
+               email: user.email,
+               photoURL: user.photoURL,
+               emailVerified: user.emailVerified,
+               uid: user.uid
+            });
          } else {
             navigate("/");
          }
@@ -126,8 +157,11 @@ const HomePage = () => {
       if (!newNote.content) {
          invalidContent = true;
       }
-      if (invalidTitle || invalidContent) {
+      if (invalidTitle) {
          setIsTitleInvalid(invalidTitle);
+         return;
+      }
+      if (invalidContent) {
          setIsContentInvalid(invalidContent);
          return;
       }
@@ -153,8 +187,11 @@ const HomePage = () => {
       if (!updatedNote.content) {
          invalidContent = true;
       }
-      if (invalidTitle || invalidContent) {
+      if (invalidTitle) {
          setIsTitleInvalid(invalidTitle);
+         return;
+      }
+      if (invalidContent) {
          setIsContentInvalid(invalidContent);
          return;
       }
@@ -185,7 +222,7 @@ const HomePage = () => {
                <Col xs md="1"></Col>
 
                <Col md="10">
-                  <p>{isLoading ? "Loading..." : `Hello: ${auth.currentUser.email}`}</p>
+                  <p>{userProfile.displayName ? `Welcome, ${userProfile.displayName}` : `Welcome`}</p>
 
                   <CreateNoteButton handleShowCreate={handleShowCreate} />
 

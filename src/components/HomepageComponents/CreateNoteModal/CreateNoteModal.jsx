@@ -1,4 +1,6 @@
-import { Button, Form, Modal } from 'react-bootstrap';
+import Button from 'react-bootstrap/Form';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 import './CreateNoteModal.css';
 

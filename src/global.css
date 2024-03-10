@@ -26,7 +26,8 @@ body {
 .create-note__modal .modal-content,
 .update-note__modal .modal-content,
 .rest-password__modal .modal-content,
-.reset-password-confirmation__modal .modal-content {
+.reset-password-confirmation__modal .modal-content,
+.reauthenticate__modal .modal-content {
    background-color: rgb(255, 193, 7);
    color: black;
    border-radius: 0;

@@ -8,14 +8,18 @@ const AuthButtons = ({ selected, setSelected }) => {
          <Button
             className="login__btn"
             variant={`${selected === "Login" ? "outline-primary" : ""}`}
-            onClick={() => setSelected("Login")}
+            onClick={() => {
+               setSelected("Login")
+            }}
          >
             Login
          </Button>
          <Button
             className="signup__btn"
             variant={`${selected === "Signup" ? "outline-primary" : ""}`}
-            onClick={() => setSelected("Signup")}
+            onClick={() => {
+               setSelected("Signup")
+            }}
          >
             Signup
          </Button>

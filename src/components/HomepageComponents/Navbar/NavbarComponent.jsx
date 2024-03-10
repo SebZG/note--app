@@ -1,4 +1,4 @@
-import { signOut } from 'firebase/auth';
+import { signOut, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../../firebase/init';
 
@@ -10,6 +10,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import './NavbarComponent.css';
+
+// const auth = getAuth(); 
 
 const NavbarComponent = () => {
    const navigate = useNavigate();
@@ -31,7 +33,9 @@ const NavbarComponent = () => {
                   navbarScroll
                >
                   <Nav.Link onClick={handleLogOut}>Logout</Nav.Link>
-                  <NavDropdown title="Links" id="navbarScrollingDropdown">
+                  <Nav.Link onClick={() => navigate("/homepage")}>Home</Nav.Link>
+                  <Nav.Link onClick={() => navigate("/account")}>Account</Nav.Link>
+                  {/* <NavDropdown title="Links" id="navbarScrollingDropdown">
                      <NavDropdown.Item href="">
                         Action
                      </NavDropdown.Item>
@@ -42,7 +46,7 @@ const NavbarComponent = () => {
                      <NavDropdown.Item href="">
                         Something else here
                      </NavDropdown.Item>
-                  </NavDropdown>
+                  </NavDropdown> */}
                </Nav>
                <Form className="d-flex">
                   <Form.Control

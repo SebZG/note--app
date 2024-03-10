@@ -1,12 +1,14 @@
 import {
+	getAuth,
 	createUserWithEmailAndPassword,
 	onAuthStateChanged,
 	sendPasswordResetEmail,
 	signInWithEmailAndPassword,
 	sendEmailVerification,
+	updateProfile,
 	signOut,
 } from "firebase/auth";
-import { auth } from "../../firebase/init";
+// import { auth } from "../../firebase/init";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,9 @@ import PasswordResetConfirmationModal from "../../components/WelcomeComponents/P
 import EmailVerificationModal from "../../components/WelcomeComponents/EmailVerificationModal/EmailVerificationModal";
 
 import './Welcome.css';
+
+const auth = getAuth();
+const user = auth.currentUser;
 
 const Welcome = () => {
 	// States
@@ -84,8 +89,7 @@ const Welcome = () => {
 		onAuthStateChanged(auth, (user) => {
 			if (user && !user.emailVerified) {
 				// navigate("/");
-
-				sendEmailVerification(auth.currentUser)
+				sendEmailVerification(user)
 					.then(() => {
 						setShowEmailVerification(true);
 						signOut(auth);
@@ -107,11 +111,10 @@ const Welcome = () => {
 	const handleSignup = (e) => {
 		e.preventDefault();
 
-		setIsLoading(true);
 		createUserWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
 			.then((userCred) => {
 				// const user = userCred.user;
-				navigate("/");
+				navigate("/homepage");
 				setSelected("Login");
 			})
 			.catch((error) => {
@@ -123,11 +126,10 @@ const Welcome = () => {
 	const handleLogin = (e) => {
 		e.preventDefault();
 
-		setIsLoading(true);
 		signInWithEmailAndPassword(auth, userCredentials.email, userCredentials.password)
 			.then((userCred) => {
 				// const user = userCred.user;
-				navigate("/");
+				navigate("/homepage");
 			})
 			.catch((error) => {
 				setError(error.code);
@@ -160,9 +162,12 @@ const Welcome = () => {
 
 							<WelcomeHeader />
 
-							<AuthButtons selected={selected} setSelected={setSelected} />
+							<AuthButtons
+								selected={selected}
+								setSelected={setSelected}
+							/>
 
-							{/* Login / signup form */}
+							{/* Login / Signup form */}
 							<CredentialForm
 								userCredentials={userCredentials}
 								selected={selected}
