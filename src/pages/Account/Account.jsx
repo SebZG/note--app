@@ -1,39 +1,30 @@
 import {
    getAuth,
    onAuthStateChanged,
-   updateProfile,
-   updateEmail,
-   sendEmailVerification,
    reauthenticateWithCredential,
-   verifyBeforeUpdateEmail,
-   signInWithEmailAndPassword,
    sendPasswordResetEmail,
-
+   updateProfile,
+   verifyBeforeUpdateEmail
 } from 'firebase/auth';
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-import NavbarComponent from "../../components/HomepageComponents/Navbar";
+import AccountForm from '../../components/AccountComponents/AccountForm/AccountForm';
+import PasswordResetConfirmationModal from '../../components/AccountComponents/PasswordResetConfirmationModal/PasswordResetConfirmationModal';
+import ReauthenticationModal from '../../components/AccountComponents/ReauthenticationModal/ReauthenticationModal';
+import ResetPasswordForm from '../../components/AccountComponents/ResetPasswordForm/ResetPasswordForm';
 import FullPageLoader from '../../components/FullPageLoader';
-
+import NavbarComponent from "../../components/HomepageComponents/Navbar";
 
 import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 
 const auth = getAuth();
 const user = auth.currentUser;
 
 const Account = () => {
-   // const auth = getAuth();
-   // const user = auth.currentUser;
-
    // States
    const [showReauthenticate, setShowReauthenticate] = useState(false);
    const [credentials, setCredentials] = useState({ password: "", email: "" });
@@ -199,11 +190,10 @@ const Account = () => {
 
       setShowPasswordResetConfirmation(true);
    }
-   
-	const handleClosePasswordResetConfirmation = () => {
-		setShowPasswordResetConfirmation(false);
-	}
 
+   const handleClosePasswordResetConfirmation = () => {
+      setShowPasswordResetConfirmation(false);
+   }
 
    // Effects
    useEffect(() => {
@@ -268,77 +258,26 @@ const Account = () => {
                   <h2 className='text-center'>Account</h2>
 
                   {/* Update Display Name Form */}
-                  <Form className='mt-5 w-75 mx-auto'>
-                     <Form.Group>
-                        <Form.Label className="text-white mb-3"><b>Display Name</b></Form.Label>
-                        <InputGroup>
-                           <Form.Control
-                              className="displayName-input"
-                              value={updatedProfile.displayName}
-                              type="displayName"
-                              name="displayName"
-                              placeholder={userProfile.displayName}
-                              onChange={(e) => handleProfileInputChange(e)}
-                              readOnly={isDisplayNameReadOnly}
-                           />
-                           {
-                              displayButton === "Edit" ?
-                                 <Button variant="outline-warning" onClick={handleEditDisplayName}>Edit</Button>
-                                 :
-                                 <div>
-                                    <Button variant="outline-warning" onClick={handleEditDisplayName}>Save</Button>
-                                    <Button variant="outline-warning" onClick={handleCancelDisplayName}>Cancel</Button>
-                                 </div>
-                           }
-                        </InputGroup>
-                     </Form.Group>
-
-                     {isInvalidDisplayName && <Form.Text className="text-danger">Display name is required</Form.Text>}
-                  </Form>
-
-                  {/* Update Email Form */}
-                  <Form className='mt-5 w-75 mx-auto'>
-                     <Form.Group>
-                        <Form.Label className="text-white mb-3"><b>Email</b></Form.Label>
-                        <InputGroup>
-                           <Form.Control
-                              className="email-input"
-                              value={updatedProfile.email}
-                              type="email"
-                              name="email"
-                              placeholder={userProfile.email}
-                              onChange={(e) => handleProfileInputChange(e)}
-                              readOnly={isEmailReadOnly}
-                           />
-                           {
-                              emailButton === "Edit" ?
-                                 <Button variant="outline-warning" onClick={handleEditEmail}>Edit</Button>
-                                 :
-                                 <div>
-                                    <Button variant="outline-warning" onClick={handleEditEmail}>Save</Button>
-                                    <Button variant="outline-warning" onClick={handleCancelEmail}>Cancel</Button>
-                                 </div>
-                           }
-                        </InputGroup>
-                     </Form.Group>
-
-                     {isInvalidEmail && <Form.Text className="text-danger">Email is required</Form.Text>}
-                  </Form>
+                  <AccountForm
+                     updatedProfile={updatedProfile}
+                     userProfile={userProfile}
+                     handleProfileInputChange={handleProfileInputChange}
+                     handleEditDisplayName={handleEditDisplayName}
+                     handleEditEmail={handleEditEmail}
+                     handleCancelDisplayName={handleCancelDisplayName}
+                     handleCancelEmail={handleCancelEmail}
+                     isDisplayNameReadOnly={isDisplayNameReadOnly}
+                     isEmailReadOnly={isEmailReadOnly}
+                     displayButton={displayButton}
+                     emailButton={emailButton}
+                     isInvalidDisplayName={isInvalidDisplayName}
+                     isInvalidEmail={isInvalidEmail}
+                  />
 
                   {/* Reset Password */}
-                  <Form className='mt-5 w-75 mx-auto'>
-                     <Form.Group>
-                        <Form.Label className="text-white mb-3"><b>Reset Password</b></Form.Label>
-                        <InputGroup>
-                           <Button
-                              onClick={handleShowPasswordReset}
-                              variant='outline-warning'
-                              className='w-100'>
-                              Send reset email
-                           </Button>
-                        </InputGroup>
-                     </Form.Group>
-                  </Form>
+                  <ResetPasswordForm
+                     handleShowPasswordReset={handleShowPasswordReset}
+                  />
 
                </Col>
 
@@ -346,73 +285,23 @@ const Account = () => {
             </Row>
          </Container >
 
-
-         {/* Password Reset Confirmation Modal */} 
-         <Modal
-            className="reset-password-confirmation__modal"
-            show={showPasswordResetConfirmation}
-            onHide={handleClosePasswordResetConfirmation}
-            size="sm"
-            backdrop="static"
-            centered
-         >
-            <Modal.Header closeButton>
-               <Modal.Title>Password reset sent!</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               You should receive an email to reset your password shortly.
-            </Modal.Body>
-            <Modal.Footer>
-               <Button variant="secondary" onClick={handleClosePasswordResetConfirmation}>
-                  Ok
-               </Button>
-            </Modal.Footer>
-         </Modal>
+         {/* Password Reset Confirmation Modal */}
+         <PasswordResetConfirmationModal
+            showPasswordResetConfirmation={showPasswordResetConfirmation}
+            handleClosePasswordResetConfirmation={handleClosePasswordResetConfirmation}
+         />
 
          {/* Re-authentication Modal */}
-         <Modal className='reauthenticate__modal' show={showReauthenticate} onHide={handleCloseReauthenticate} backdrop="static">
-            <Modal.Header closeButton>
-               <Modal.Title>Enter Credentials</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <Form>
-                  <Form.Group className="mb-3" >
-                     <Form.Label>Current Email</Form.Label>
-                     <Form.Control
-                        onChange={handleReauthenticateInputChange}
-                        value={credentials.email}
-                        name="email"
-                        type="email"
-                        autoFocus
-                     />
-                  </Form.Group>
-
-                  {isInvalidPassword && <Form.Text className="text-danger">Enter Password</Form.Text>}
-
-                  <Form.Group className="mb-3" >
-                     <Form.Label>Current Password</Form.Label>
-                     <Form.Control
-                        onChange={handleReauthenticateInputChange}
-                        value={credentials.password}
-                        name="password"
-                        type="password"
-                        autoFocus
-                     />
-                  </Form.Group>
-
-                  {isInvalidPassword && <Form.Text className="text-danger">Enter Password</Form.Text>}
-
-               </Form>
-            </Modal.Body>
-            <Modal.Footer>
-               <Button variant='secondary' onClick={handleCancelReauthenticate}>
-                  Cancel
-               </Button>
-               <Button variant='primary' onClick={handleSubmitReauthenticate}>
-                  Submit
-               </Button>
-            </Modal.Footer>
-         </Modal>
+         <ReauthenticationModal
+            showReauthenticate={showReauthenticate}
+            handleCloseReauthenticate={handleCloseReauthenticate}
+            handleCancelReauthenticate={handleCancelReauthenticate}
+            handleSubmitReauthenticate={handleSubmitReauthenticate}
+            handleReauthenticateInputChange={handleReauthenticateInputChange}
+            credentials={credentials}
+            isInvalidPassword={isInvalidPassword}
+            isInvalidEmail={isInvalidEmail}
+         />
       </>
    )
 }

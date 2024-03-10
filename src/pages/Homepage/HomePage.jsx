@@ -1,7 +1,6 @@
 import {
    getAuth,
-   onAuthStateChanged,
-   updateProfile
+   onAuthStateChanged
 } from 'firebase/auth';
 import {
    addDoc,
@@ -17,13 +16,13 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import FullPageLoader from '../../components/FullPageLoader';
+import CreateNoteButton from "../../components/HomepageComponents/CreateNoteButton";
 import CreateNoteModal from '../../components/HomepageComponents/CreateNoteModal';
 import NavbarComponent from "../../components/HomepageComponents/Navbar";
-import CreateNoteButton from "../../components/HomepageComponents/CreateNoteButton";
 import NotesList from "../../components/HomepageComponents/NotesList";
 import UpdateNoteModal from '../../components/HomepageComponents/UpdateNoteModal';
 import { db } from "../../firebase/init";
-import FullPageLoader from '../../components/FullPageLoader';
 
 import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";

@@ -1,14 +1,12 @@
 import {
-	getAuth,
 	createUserWithEmailAndPassword,
+	getAuth,
 	onAuthStateChanged,
+	sendEmailVerification,
 	sendPasswordResetEmail,
 	signInWithEmailAndPassword,
-	sendEmailVerification,
-	updateProfile,
-	signOut,
+	signOut
 } from "firebase/auth";
-// import { auth } from "../../firebase/init";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,11 +18,11 @@ import Row from 'react-bootstrap/Row';
 import FullPageLoader from "../../components/FullPageLoader";
 import AuthButtons from "../../components/WelcomeComponents/AuthButtons";
 import CredentialForm from "../../components/WelcomeComponents/CredentialsForm";
+import EmailVerificationModal from "../../components/WelcomeComponents/EmailVerificationModal/EmailVerificationModal";
 import PasswordReset from "../../components/WelcomeComponents/PasswordReset";
+import PasswordResetConfirmationModal from "../../components/WelcomeComponents/PasswordResetConfirmationModal";
 import PasswordResetModal from "../../components/WelcomeComponents/PasswordResetModal";
 import WelcomeHeader from "../../components/WelcomeComponents/WelcomeHeader";
-import PasswordResetConfirmationModal from "../../components/WelcomeComponents/PasswordResetConfirmationModal";
-import EmailVerificationModal from "../../components/WelcomeComponents/EmailVerificationModal/EmailVerificationModal";
 
 import './Welcome.css';
 
