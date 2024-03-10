@@ -6,7 +6,9 @@ import {
    sendEmailVerification,
    reauthenticateWithCredential,
    verifyBeforeUpdateEmail,
-   signInWithEmailAndPassword
+   signInWithEmailAndPassword,
+   sendPasswordResetEmail,
+
 } from 'firebase/auth';
 
 import { useState, useEffect } from "react";
@@ -25,12 +27,12 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-// const auth = getAuth();
-// const user = auth.currentUser;
+const auth = getAuth();
+const user = auth.currentUser;
 
 const Account = () => {
-   const auth = getAuth();
-   const user = auth.currentUser;
+   // const auth = getAuth();
+   // const user = auth.currentUser;
 
    // States
    const [showReauthenticate, setShowReauthenticate] = useState(false);
@@ -43,6 +45,7 @@ const Account = () => {
    const [isInvalidDisplayName, setIsInvalidDisplayName] = useState(false);
    const [isInvalidPassword, setIsInvalidPassword] = useState(false);
    const [isInvalidEmail, setIsInvalidEmail] = useState(false);
+   const [showPasswordResetConfirmation, setShowPasswordResetConfirmation] = useState(false);
    const [userProfile, setUserProfile] = useState({});
    const [updatedProfile, setUpdatedProfile] = useState({
       displayName: "",
@@ -191,6 +194,17 @@ const Account = () => {
       setEmailButton("Edit");
    }
 
+   const handleShowPasswordReset = () => {
+      sendPasswordResetEmail(auth, userProfile.email);
+
+      setShowPasswordResetConfirmation(true);
+   }
+   
+	const handleClosePasswordResetConfirmation = () => {
+		setShowPasswordResetConfirmation(false);
+	}
+
+
    // Effects
    useEffect(() => {
       onAuthStateChanged(auth, (user) => {
@@ -250,7 +264,7 @@ const Account = () => {
                <Col xs md="1"></Col>
 
                <Col md="10" className="bg-primary p-5">
-                  
+
                   <h2 className='text-center'>Account</h2>
 
                   {/* Update Display Name Form */}
@@ -311,11 +325,49 @@ const Account = () => {
                      {isInvalidEmail && <Form.Text className="text-danger">Email is required</Form.Text>}
                   </Form>
 
+                  {/* Reset Password */}
+                  <Form className='mt-5 w-75 mx-auto'>
+                     <Form.Group>
+                        <Form.Label className="text-white mb-3"><b>Reset Password</b></Form.Label>
+                        <InputGroup>
+                           <Button
+                              onClick={handleShowPasswordReset}
+                              variant='outline-warning'
+                              className='w-100'>
+                              Send reset email
+                           </Button>
+                        </InputGroup>
+                     </Form.Group>
+                  </Form>
+
                </Col>
 
                <Col xs md="1"></Col>
             </Row>
          </Container >
+
+
+         {/* Password Reset Confirmation Modal */} 
+         <Modal
+            className="reset-password-confirmation__modal"
+            show={showPasswordResetConfirmation}
+            onHide={handleClosePasswordResetConfirmation}
+            size="sm"
+            backdrop="static"
+            centered
+         >
+            <Modal.Header closeButton>
+               <Modal.Title>Password reset sent!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+               You should receive an email to reset your password shortly.
+            </Modal.Body>
+            <Modal.Footer>
+               <Button variant="secondary" onClick={handleClosePasswordResetConfirmation}>
+                  Ok
+               </Button>
+            </Modal.Footer>
+         </Modal>
 
          {/* Re-authentication Modal */}
          <Modal className='reauthenticate__modal' show={showReauthenticate} onHide={handleCloseReauthenticate} backdrop="static">
