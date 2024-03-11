@@ -21,6 +21,7 @@ import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 
+import './Account.css';
 
 const Account = () => {
    const auth = getAuth();
