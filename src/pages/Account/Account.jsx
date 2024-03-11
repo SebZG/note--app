@@ -21,10 +21,10 @@ import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 
-const auth = getAuth();
-const user = auth.currentUser;
 
 const Account = () => {
+   const auth = getAuth();
+   const user = auth.currentUser;
    // States
    const [showReauthenticate, setShowReauthenticate] = useState(false);
    const [credentials, setCredentials] = useState({ password: "", email: "" });

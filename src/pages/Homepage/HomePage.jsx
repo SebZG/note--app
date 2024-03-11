@@ -30,10 +30,9 @@ import Row from 'react-bootstrap/Row';
 
 import './HomePage.css';
 
-const auth = getAuth();
-const user = auth.currentUser;
-
 const HomePage = () => {
+   const auth = getAuth();
+   const user = auth.currentUser;
    // States
    const [isLoading, setIsLoading] = useState(true);
    const [notes, setNotes] = useState([]);

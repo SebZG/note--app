@@ -26,10 +26,9 @@ import WelcomeHeader from "../../components/WelcomeComponents/WelcomeHeader";
 
 import './Welcome.css';
 
-const auth = getAuth();
-const user = auth.currentUser;
-
 const Welcome = () => {
+	const auth = getAuth();
+	const user = auth.currentUser;
 	// States
 	const [isLoading, setIsLoading] = useState(true);
 	const [userCredentials, setUserCredentials] = useState({ email: "", password: "" });
